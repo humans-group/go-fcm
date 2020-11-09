@@ -2,6 +2,8 @@ package fcm
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/valyala/fasthttp"
@@ -20,6 +22,9 @@ type Client interface {
 	// occurs (i.e. if the response status code is not between 200 and 299).
 	Send(ctx context.Context, msg *Message) error
 }
+
+// This error can be caused by missing registration tokens, unregistered or expired tokens.
+var ErrUnregistered = errors.New("Unregistered")
 
 var _ Client = (*SimpleClient)(nil)
 
@@ -95,12 +100,7 @@ func (c *SimpleClient) Send(ctx context.Context, msg *Message) error {
 		return fmt.Errorf("failed to perform request: %w", err)
 	}
 
-	statusCode := resp.StatusCode()
-	if statusCode >= 200 && statusCode <= 299 {
-		return nil
-	}
-
-	return fmt.Errorf("unexpected status code: %d: %q", statusCode, string(resp.Body()))
+	return handleResponse(resp.StatusCode(), resp.Body())
 }
 
 func (c *SimpleClient) authHeaderValue() ([]byte, error) {
@@ -113,4 +113,24 @@ func (c *SimpleClient) authHeaderValue() ([]byte, error) {
 
 	headerValue := token.Type() + " " + token.AccessToken
 	return []byte(headerValue), nil
+}
+
+// Handle response
+func handleResponse(statusCode int, respBody []byte) error {
+	// Success response
+	if statusCode >= 200 && statusCode <= 299 {
+		return nil
+	}
+
+	var resp Response
+	if err := json.Unmarshal(respBody, &resp); err != nil {
+		return fmt.Errorf("failed to unmarshal response body for status code %d: %w", statusCode, err)
+	}
+
+	switch resp.ErrorCode {
+	case errCodeUnregistered:
+		return ErrUnregistered
+	default:
+		return fmt.Errorf("unexpected status code: %d: %q", statusCode, string(respBody))
+	}
 }
