@@ -138,7 +138,7 @@ func handleResponse(statusCode int, respBody []byte) error {
 	}
 
 	switch errCode {
-	case errCodeUnregistered:
+	case errorCodeUnregistered:
 		return ErrUnregistered
 	default:
 		return fmt.Errorf("unexpected response with status code: %d: %q", statusCode, string(respBody))

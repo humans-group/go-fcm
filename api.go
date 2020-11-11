@@ -31,9 +31,9 @@ type errorCode string
 
 const (
 	// Unknown error
-	errCodeUnspecified errorCode = "UNSPECIFIED_ERROR"
+	errorCodeUnspecified errorCode = "UNSPECIFIED_ERROR"
 
 	// App instance was unregistered from FCM for HTTP error code = 404
 	// This usually means that the token used is no longer valid (i.e. expired) and a new one must be used.
-	errCodeUnregistered errorCode = "UNREGISTERED"
+	errorCodeUnregistered errorCode = "UNREGISTERED"
 )
