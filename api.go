@@ -5,23 +5,28 @@ type sendRequest struct {
 	Message *Message `json:"message"`
 }
 
+// There is not clear doc for the API sendResponse
+// but it could be checked using this API playground
+// https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages/send
 // easyjson:json
-type response struct {
+type sendResponse struct {
 	Error *responseError `json:"error,omitempty"`
 }
 
+// Mark all fields like omitempty, as we don't known API doc
+// that could guarantee fields exist in the response.
 // easyjson:json
 type responseError struct {
-	Code    int       `json:"code"`
-	Message string    `json:"message,omitempty"`
-	Status  string    `json:"status"`
-	Details []details `json:"details,omitempty"`
+	Code    int            `json:"code,omitempty"`
+	Message string         `json:"message,omitempty"`
+	Status  string         `json:"status,omitempty"`
+	Details []errorDetails `json:"errorDetails,omitempty"`
 }
 
-// details could be different type of structs,
+// Details could be different type of structs,
 // we are interested in one that has errorCode.
 // easyjson:json
-type details struct {
+type errorDetails struct {
 	ErrorCode errorCode `json:"errorCode,omitempty"`
 }
 

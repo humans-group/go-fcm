@@ -5,6 +5,7 @@ go 1.13
 require (
 	cloud.google.com/go v0.56.0 // indirect
 	github.com/gojuno/minimock/v3 v3.0.6
+	github.com/google/gofuzz v1.2.0
 	github.com/klauspost/compress v1.10.9 // indirect
 	github.com/mailru/easyjson v0.7.1
 	github.com/onsi/ginkgo v1.14.2
