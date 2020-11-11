@@ -95,3 +95,262 @@ func (v *sendRequest) UnmarshalJSON(data []byte) error {
 func (v *sendRequest) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjsonC1cedd36DecodeGithubComHumansNetFcm(l, v)
 }
+func easyjsonC1cedd36DecodeGithubComHumansNetFcm1(in *jlexer.Lexer, out *responseError) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeString()
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "code":
+			out.Code = int(in.Int())
+		case "message":
+			out.Message = string(in.String())
+		case "status":
+			out.Status = string(in.String())
+		case "details":
+			if in.IsNull() {
+				in.Skip()
+				out.Details = nil
+			} else {
+				in.Delim('[')
+				if out.Details == nil {
+					if !in.IsDelim(']') {
+						out.Details = make([]details, 0, 4)
+					} else {
+						out.Details = []details{}
+					}
+				} else {
+					out.Details = (out.Details)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v1 details
+					(v1).UnmarshalEasyJSON(in)
+					out.Details = append(out.Details, v1)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjsonC1cedd36EncodeGithubComHumansNetFcm1(out *jwriter.Writer, in responseError) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"code\":"
+		out.RawString(prefix[1:])
+		out.Int(int(in.Code))
+	}
+	if in.Message != "" {
+		const prefix string = ",\"message\":"
+		out.RawString(prefix)
+		out.String(string(in.Message))
+	}
+	{
+		const prefix string = ",\"status\":"
+		out.RawString(prefix)
+		out.String(string(in.Status))
+	}
+	if len(in.Details) != 0 {
+		const prefix string = ",\"details\":"
+		out.RawString(prefix)
+		{
+			out.RawByte('[')
+			for v2, v3 := range in.Details {
+				if v2 > 0 {
+					out.RawByte(',')
+				}
+				(v3).MarshalEasyJSON(out)
+			}
+			out.RawByte(']')
+		}
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v responseError) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjsonC1cedd36EncodeGithubComHumansNetFcm1(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v responseError) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonC1cedd36EncodeGithubComHumansNetFcm1(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *responseError) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjsonC1cedd36DecodeGithubComHumansNetFcm1(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *responseError) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonC1cedd36DecodeGithubComHumansNetFcm1(l, v)
+}
+func easyjsonC1cedd36DecodeGithubComHumansNetFcm2(in *jlexer.Lexer, out *response) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeString()
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "error":
+			if in.IsNull() {
+				in.Skip()
+				out.Error = nil
+			} else {
+				if out.Error == nil {
+					out.Error = new(responseError)
+				}
+				(*out.Error).UnmarshalEasyJSON(in)
+			}
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjsonC1cedd36EncodeGithubComHumansNetFcm2(out *jwriter.Writer, in response) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	if in.Error != nil {
+		const prefix string = ",\"error\":"
+		first = false
+		out.RawString(prefix[1:])
+		(*in.Error).MarshalEasyJSON(out)
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v response) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjsonC1cedd36EncodeGithubComHumansNetFcm2(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v response) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonC1cedd36EncodeGithubComHumansNetFcm2(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *response) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjsonC1cedd36DecodeGithubComHumansNetFcm2(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *response) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonC1cedd36DecodeGithubComHumansNetFcm2(l, v)
+}
+func easyjsonC1cedd36DecodeGithubComHumansNetFcm3(in *jlexer.Lexer, out *details) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeString()
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "errorCode":
+			out.ErrorCode = errorCode(in.String())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjsonC1cedd36EncodeGithubComHumansNetFcm3(out *jwriter.Writer, in details) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	if in.ErrorCode != "" {
+		const prefix string = ",\"errorCode\":"
+		first = false
+		out.RawString(prefix[1:])
+		out.String(string(in.ErrorCode))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v details) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjsonC1cedd36EncodeGithubComHumansNetFcm3(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v details) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonC1cedd36EncodeGithubComHumansNetFcm3(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *details) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjsonC1cedd36DecodeGithubComHumansNetFcm3(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *details) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonC1cedd36DecodeGithubComHumansNetFcm3(l, v)
+}

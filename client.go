@@ -2,8 +2,6 @@ package fcm
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 	"fmt"
 
 	"github.com/valyala/fasthttp"
@@ -22,9 +20,6 @@ type Client interface {
 	// occurs (i.e. if the response status code is not between 200 and 299).
 	Send(ctx context.Context, msg *Message) error
 }
-
-// This error can be caused by missing registration tokens, unregistered or expired tokens.
-var ErrUnregistered = errors.New("Unregistered")
 
 var _ Client = (*SimpleClient)(nil)
 
@@ -122,15 +117,30 @@ func handleResponse(statusCode int, respBody []byte) error {
 		return nil
 	}
 
-	var resp Response
-	if err := json.Unmarshal(respBody, &resp); err != nil {
-		return fmt.Errorf("failed to unmarshal response body for status code %d: %w", statusCode, err)
+	var resp response
+	if err := resp.UnmarshalJSON(respBody); err != nil {
+		return fmt.Errorf("unmarshal response with status code %d: %w", statusCode, err)
 	}
 
-	switch resp.ErrorCode {
+	if resp.Error == nil {
+		return fmt.Errorf("empty error in response for status code %d: %q", statusCode, string(respBody))
+	}
+
+	// Extract errorCode of google.firebase.fcm type
+	// details could be different types of structs
+	// Some of the details elements could
+	var errCode errorCode
+	for _, detail := range resp.Error.Details {
+		if detail.ErrorCode != "" {
+			errCode = detail.ErrorCode
+			break
+		}
+	}
+
+	switch errCode {
 	case errCodeUnregistered:
 		return ErrUnregistered
 	default:
-		return fmt.Errorf("unexpected status code: %d: %q", statusCode, string(respBody))
+		return fmt.Errorf("unexpected response with status code: %d: %q", statusCode, string(respBody))
 	}
 }
