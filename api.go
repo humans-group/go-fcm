@@ -20,7 +20,7 @@ type responseError struct {
 	Code    int            `json:"code,omitempty"`
 	Message string         `json:"message,omitempty"`
 	Status  string         `json:"status,omitempty"`
-	Details []errorDetails `json:"errorDetails,omitempty"`
+	Details []errorDetails `json:"details,omitempty"`
 }
 
 // Details could be different type of structs,
