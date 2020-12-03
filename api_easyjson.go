@@ -195,7 +195,7 @@ func easyjsonC1cedd36DecodeGithubComHumansNetFcm2(in *jlexer.Lexer, out *respons
 			out.Message = string(in.String())
 		case "status":
 			out.Status = string(in.String())
-		case "errorDetails":
+		case "details":
 			if in.IsNull() {
 				in.Skip()
 				out.Details = nil
@@ -259,7 +259,7 @@ func easyjsonC1cedd36EncodeGithubComHumansNetFcm2(out *jwriter.Writer, in respon
 		out.String(string(in.Status))
 	}
 	if len(in.Details) != 0 {
-		const prefix string = ",\"errorDetails\":"
+		const prefix string = ",\"details\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
