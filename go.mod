@@ -1,4 +1,4 @@
-module github.com/humans-group/fcm
+module github.com/humans-group/go-fcm
 
 go 1.17
 
