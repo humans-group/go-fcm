@@ -1,6 +1,6 @@
 module github.com/humans-group/go-fcm
 
-go 1.17
+go 1.19
 
 require (
 	github.com/gojuno/minimock/v3 v3.0.6

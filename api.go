@@ -28,6 +28,11 @@ type responseError struct {
 // easyjson:json
 type errorDetails struct {
 	ErrorCode errorCode `json:"errorCode,omitempty"`
+	FieldViolations []fieldValidation `json:"field_violations"`
+}
+
+type fieldValidation struct {
+	Field string `json:"field"`
 }
 
 // Possible error codes are listed here
@@ -41,4 +46,10 @@ const (
 	// App instance was unregistered from FCM for HTTP error code = 404
 	// This usually means that the token used is no longer valid (i.e. expired) and a new one must be used.
 	errorCodeUnregistered errorCode = "UNREGISTERED"
+	// Request parameters were invalid for HTTP error code = 400
+	// This means that one of params was invalid, in case payload is correct this means token is invalid and a new one must be used
+	errorCodeInvalidArgument errorCode = "INVALID_ARGUMENT"
+
+	// field name that will be passed as field in fieldValidation in case problems with token on INVALID_ARGUMENT error code
+	errorFieldNameToken = "message.token"
 )

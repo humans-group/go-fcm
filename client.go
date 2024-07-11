@@ -131,11 +131,16 @@ func handleResponse(statusCode int, respBody []byte) error {
 	// Details could be different types of structs
 	// and some of the errorDetails elements could not have ErrorCode.
 	var errCode errorCode
+	var tokenFieldValidationError bool
 	if len(resp.Error.Details) > 0 {
 		for _, detail := range resp.Error.Details {
 			if detail.ErrorCode != "" {
 				errCode = detail.ErrorCode
-				break
+			}
+			for _, field := range detail.FieldViolations {
+				if field.Field == errorFieldNameToken {
+					tokenFieldValidationError = true
+				}
 			}
 		}
 	}
@@ -143,7 +148,11 @@ func handleResponse(statusCode int, respBody []byte) error {
 	switch errCode {
 	case errorCodeUnregistered:
 		return ErrUnregistered
+	case errorCodeInvalidArgument:
+		if tokenFieldValidationError {
+			return ErrInvalidToken
+		}
 	default:
-		return fmt.Errorf("unsuccessful sendResponse with status code: %d: %s", statusCode, string(respBody))
 	}
+	return fmt.Errorf("unsuccessful sendResponse with status code: %d: %s", statusCode, string(respBody))
 }
