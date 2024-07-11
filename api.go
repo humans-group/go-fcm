@@ -27,11 +27,11 @@ type responseError struct {
 // we are interested in one that has errorCode.
 // easyjson:json
 type errorDetails struct {
-	ErrorCode errorCode `json:"errorCode,omitempty"`
-	FieldViolations []fieldValidation `json:"field_violations"`
+	ErrorCode       errorCode        `json:"errorCode,omitempty"`
+	FieldViolations []fieldViolation `json:"field_violations"`
 }
 
-type fieldValidation struct {
+type fieldViolation struct {
 	Field string `json:"field"`
 }
 
@@ -50,6 +50,6 @@ const (
 	// This means that one of params was invalid, in case payload is correct this means token is invalid and a new one must be used
 	errorCodeInvalidArgument errorCode = "INVALID_ARGUMENT"
 
-	// field name that will be passed as field in fieldValidation in case problems with token on INVALID_ARGUMENT error code
+	// field name that will be passed as field in fieldViolation in case problems with token on INVALID_ARGUMENT error code
 	errorFieldNameToken = "message.token"
 )
